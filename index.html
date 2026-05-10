@@ -47,7 +47,7 @@
     <button class="btn-secondary"><i class="bi bi-skip-end-fill"></i></button>
     <button class="btn-secondary"><i class="bi bi-repeat"></i></button>
   </div>
-  <audio id="myAudio" src="assets/Ed Sheeran - photograph  sub español.mp3"></audio> 
+  <audio id="myAudio" src="assets/EdSheeranphotograph.mp3.mp3"></audio> 
 </div>
 <!-- IMAGEN -->
 <section class="section">
@@ -248,36 +248,39 @@ function copyAlias() {
   });
 </script>
 <script>
-  // CONTROLADOR DE MÚSICA TIPO SPOTIFY
-  const playBtn = document.getElementById('playBtn');
-  const audio = document.getElementById('myAudio');
-  let isPlaying = false;
+ // CONTROLADOR DE MÚSICA REFORZADO PARA MÓVILES
+const playBtn = document.getElementById('playBtn');
+const audio = document.getElementById('myAudio');
+let isPlaying = false;
 
-  playBtn.addEventListener('click', function() {
-    // Buscamos el icono dentro del botón para cambiarlo
-    const icon = playBtn.querySelector('i');
+// Esto ayuda a que el celular ya sepa que hay un audio listo
+audio.load(); 
 
-    if (isPlaying) {
-      audio.pause();
-      icon.classList.replace('bi-pause-fill', 'bi-play-fill');
-      isPlaying = false;
-    } else {
-      // Intentamos reproducir
-      audio.play().then(() => {
-        icon.classList.replace('bi-play-fill', 'bi-pause-fill');
-        isPlaying = true;
-      }).catch(error => {
-        console.error("Error al reproducir:", error);
-        alert("Haz clic de nuevo para activar la música.");
-      });
-    }
-  });
-  // Si la canción termina sola, resetear el botón
-  audio.onended = function() {
-    const icon = playBtn.querySelector('i');
+playBtn.addEventListener('click', function() {
+  const icon = playBtn.querySelector('i');
+
+  if (isPlaying) {
+    audio.pause();
     icon.classList.replace('bi-pause-fill', 'bi-play-fill');
     isPlaying = false;
-  };
+  } else {
+    // Usamos una promesa para manejar el play en móviles
+    audio.play().then(() => {
+      icon.classList.replace('bi-play-fill', 'bi-pause-fill');
+      isPlaying = true;
+    }).catch(error => {
+      console.error("Error en móvil:", error);
+      // Intento secundario si el primero falla
+      audio.play();
+    });
+  }
+});
+
+audio.onended = function() {
+  const icon = playBtn.querySelector('i');
+  icon.classList.replace('bi-pause-fill', 'bi-play-fill');
+  isPlaying = false;
+};
 </script>
 <!-- SECCIÓN FINAL CON FOTO DIFUMINADA -->
 <section class="footer-image-container">
